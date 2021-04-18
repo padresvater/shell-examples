@@ -1,1 +1,1 @@
-add build status icon
+![](https://travis-ci.com/padresvater/shell-examples.svg?branch=master)
