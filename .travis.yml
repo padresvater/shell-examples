@@ -8,7 +8,7 @@ script:
   - bash test.sh
   - ls -l
   - pwd
-  - cat file
+
 #  - cat /tmp/output.log
 
 notifications:
