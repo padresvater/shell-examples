@@ -29,7 +29,7 @@ then
     exit 0
 fi
 echo "脚本传入参数$1"
-echo "====================="
+echo "================================"
 
 # 各函数变量名的初始化
 resize=0
@@ -40,15 +40,27 @@ if_convert=0
 dir="./image"
 out="./OutPut"
 
-# 图片的质量压缩函数，请输入图片路径，
+# 图片的质量压缩函数
 function jpegcompress() {
     path=($dir)
-    i=1
     for file in "$path"/*.png;do
-        ( convert "$file" -compress JPEG -quality 85 "$out"/"$i.jpg")
-        i=$((i+1))
+        ( convert "$file" -compress JPEG -quality 85 "$out"/"compressed_${file##*/}.jpg")
     done
     echo "========图片质量压缩完成========"
 }
-jpegcompress 
+# jpegcompress 
 
+# 压缩分辨率函数,##.作用是删去最后一个.前的字符串，即取文件后缀
+function resolution() {
+    path=($dir)
+    for file in "$path"/*.*;do
+        if [[  ${file##*.} == "jpg" ||  ${file##*.} == "svg" || ${file##*.} == "png" ]];then
+            convert "$file" -resize 50% "$out"/"resolution_${file##*/}"
+        fi
+    done
+    echo "=========分辨率压缩完成========="
+    return
+}
+# resolution
+
+# 
