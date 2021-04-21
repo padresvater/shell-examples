@@ -5,25 +5,30 @@ if [[ $1 = "--help" ]] || [[ $1 = "-h" ]]
 then
     echo "========图片处理脚本的帮助文档========"
     echo "
+    脚本支持：
+    命令行参数方式使用不同功能
+    对指定目录下所有支持格式的图片文件进行批处理指定目录进行批处理
+    以下常见图片批处理功能的单独使用或组合使用
+        对jpeg格式图片进行图片质量压缩
+        对jpeg/png/svg格式图片在保持原始宽高比的前提下压缩分辨率
+        对图片批量添加自定义文本水印
+        批量重命名（统一添加文件名前缀或后缀，不影响原始文件扩展名）
+        将png/svg图片统一转换为jpg格式；
+        
     -h,--help                  显示本脚本的帮助文档
 
-    -q,--quality               JPEG quality compression,value range from1 to 100
-                               (Defualt 80 if not be provided).Output files will 
-                               be named with "JpgC_" preffix.
+    -q,--quality               对图片进行质量压缩时的质量参数，质量为1（最低图像质量和最高压缩率）
+                               到100（最佳质量但有效压缩率最低）。
+                               默认值是如果可以确定，则使用输入图像的估计质量，否则使用92。
+                               如果质量大于90，则不会对色度通道进行下采样。
 
-    -r,--resize                Resize jpeg/png/svg images with original ratio(Defualt 
-                               80 not be provided).Outpu will be named with 
-                               "R_" preffix.
+    -r,--resize                保持原始宽高比的前提下压缩分辨率的比率
 
-    -w string                  Add text watermark to the images.Output files will be
-                               named with "WM_" prefix.
+    -w,--watermark             需要在图片中添加的文本水印
 
-    -r,--rename                重命名图片
+    -r,--rename                重命名图片,作为前缀添加到文件名中而不改变拓展名。
 
-    -c,--convert               Convert png/svg images to jpeg.Possibly,to avoid files 
-                               with the same name.If image is png,output will be named
-                               with "_p" suffix. If image is svg,output will be named 
-                               with "_s" suffix."
+    -c,--convert               将png和svg图片转化为jpg格式，不改变原有文件名。"
     exit 0
 fi
 echo "脚本传入参数$1"
@@ -84,4 +89,17 @@ function rename() {
     return
 }
 # rename
+
+function convert_to_jpg() {
+    path=($dir)
+    for file in "$path"/*.*;do
+        if [[  ${file##*.} == "svg" || ${file##*.} == "png" ]];then
+            file1=${file##*/}
+            convert "$file" "$out/${file1%.*}.jpg"              
+        fi
+    done
+    echo "==========转换格式完成=========="
+    return
+}
+ convert_to_jpg
 
