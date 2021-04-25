@@ -2,14 +2,25 @@ language: bash
 
 before_install:
   - sudo apt-get update && sudo apt-get install -y shellcheck
+  - sudo apt-get install imagemagick
+  - wget "https://c4pr1c3.github.io/LinuxSysAdmin/exp/chap0x04/web_log.tsv.7z"   
+  - wget -O worldcupplayerinfo.tsv https://raw.githubusercontent.com/c4pr1c3/LinuxSysAdmin/master/exp/chap0x04/worldcupplayerinfo.tsv
+  - sudo sudo apt-get install p7zip-full
+  - 7z x  web_log.tsv.7z
+  - ls
 
 script:
-  - ls -l
-  - bash test.sh
-  - ls -l
-  - pwd
+  - bash image_processing.sh -h
+  - bash image_processing.sh -w -ren -res -com -con
+  - cat log.txt
+  - bash data_processing1.sh -h
+  - bash data_processing1.sh -a -p -na -as
+  - cat log2.txt
+  - bash data_processing2.sh -h
+  - bash data_processing2.sh -ho -i -u -4 -c -us
+  - cat log3.txt
+  - ls OutPut
 
-#  - cat /tmp/output.log
 
 notifications:
   email:
